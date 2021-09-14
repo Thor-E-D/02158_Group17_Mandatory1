@@ -171,7 +171,7 @@ public class Search {
                 // Append result to data file
                 FileWriter f = new FileWriter(datafile,true);
                 PrintWriter data =  new PrintWriter(new BufferedWriter(f));
-                data.println(s);
+                data.println(s.replace(".",","));
                 data.close();
             }
         } catch (IOException e) {
@@ -219,8 +219,12 @@ public class Search {
                 totalTime += time;
 
                 System.out.print("\nSingle task: ");
+                //Making data for the datafile:
+                String data = "" + time;
+                writeData(data);
                 writeRun(run);  writeResult(singleResult);  writeTime(time);
             }
+            writeData("Measurement over!"); //to differentiate between different measurements in datafile.
 
             double singleTime = totalTime / runs;
             System.out.print("\n\nSingle task (avg.): ");
