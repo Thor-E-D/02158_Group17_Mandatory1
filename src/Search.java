@@ -45,7 +45,6 @@ class SearchTask implements Callable<List<Integer>> {
             if (eq)
                 result.add(i);
         }
-
         return result;
     }
 }
@@ -98,6 +97,7 @@ public class Search {
 
                 if (argv[i].equals("-d")) {
                     datafile = argv[i+1];
+                    cleardata();
                     i += 2;
                     continue;
                 }
@@ -140,6 +140,19 @@ public class Search {
                     + "    -R r         Run the search n times (r > 0)\n"
                     + "    -d datafile  Define datafile\n\n" );
             System.exit(1);
+        }
+    }
+
+    private static void cleardata() {
+        try {
+            if (datafile != null) {
+                // Append result to data file
+                PrintWriter writer = new PrintWriter(datafile);
+                writer.print("");
+                writer.close();
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
         }
     }
 
@@ -235,13 +248,23 @@ public class Search {
              * Run search using multiple tasks
              *********************************************/
 
-/*+++++++++ Uncomment for Problem 2+
+// Uncomment for Problem 2+
 
             // Create list of tasks
             List<SearchTask> taskList = new ArrayList<SearchTask>();
             // Add tasks to list here
-
-            List<Integer> result = null;
+            int idealSplitUp = len/ntasks;
+            int patterLength = pattern.length;
+            for (int i = 0; i < ntasks; i++) {
+                int from = i * idealSplitUp;
+                int to = ((i+1) * idealSplitUp) +patterLength;
+                if (i + 1 == ntasks) {
+                    to = len;
+                }
+                //char [] textsplit = Arrays.copyOfRange(text,from,to); //TODO: this does not seem nessesary
+                taskList.add(new SearchTask(text,pattern,from, to));
+            }
+            List<Integer> result = new LinkedList<Integer>();
 
             // Run the tasks a couple of times
             for (int i = 0; i < warmups; i++) {
@@ -259,6 +282,12 @@ public class Search {
 
                 // Overall result is an ordered list of unique occurrence positions
                 result = new LinkedList<Integer>();
+                for (int i=0; i < futures.size(); i++) {
+                    if (futures.get(i) != null) {
+                        result.addAll(futures.get(i).get());
+                    }
+
+                }
                 // Combine future results into an overall result
 
                 time = (double) (System.nanoTime() - start) / 1e9;
@@ -278,7 +307,6 @@ public class Search {
             }
             System.out.printf("\n\nAverage speedup: %1.2f\n\n", singleTime / multiTime);
 
-++++++++++*/
 
             /**********************************************
              * Terminate engine after use
