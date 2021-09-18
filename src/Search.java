@@ -195,7 +195,11 @@ public class Search {
         }
     }
 
-    public static void main(String[] argv) {
+    public Search(String[] argv) {
+        main2(argv);
+    }
+
+    public static void main2(String[] argv) {
         try {
             long start;
             double time, totalTime = 0.0;
@@ -206,7 +210,7 @@ public class Search {
                     fname, new String(pattern), ntasks, nthreads, warmups, runs);
 
             /* Setup execution engine */
-            ExecutorService engine = Executors.newSingleThreadExecutor();
+            ExecutorService engine = Executors.newFixedThreadPool(nthreads);
 
             /**********************************************
              * Run search using a single task
@@ -236,13 +240,10 @@ public class Search {
 
                 System.out.print("\nSingle task: ");
                 //Making data for the datafile:
-                String data = "" + time;
-                writeData(data);
                 writeRun(run);
                 writeResult(singleResult);
                 writeTime(time);
             }
-            writeData("Measurement over!"); //to differentiate between different measurements in datafile.
 
             double singleTime = totalTime / runs;
             System.out.print("\n\nSingle task (avg.): ");
@@ -315,6 +316,7 @@ public class Search {
                 System.out.println("\nERROR: lists differ");
             }
             System.out.printf("\n\nAverage speedup: %1.2f\n\n", singleTime / multiTime);
+            writeData("" + singleTime / multiTime);
 
 
             /**********************************************
