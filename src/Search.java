@@ -63,7 +63,7 @@ public class Search {
     static boolean printPos = false;    // Print all positions found
     static int warmups = 0;             // No. of warmup searches
     static int runs = 1;                // No. of search repetitions
-    static String  datafile;            // Name of data file
+    static String datafile;            // Name of data file
 
 
     static void getArguments(String[] argv) {
@@ -84,19 +84,19 @@ public class Search {
                 }
 
                 if (argv[i].equals("-R")) {
-                    runs = new Integer(argv[i+1]);
+                    runs = new Integer(argv[i + 1]);
                     i += 2;
                     continue;
                 }
 
                 if (argv[i].equals("-W")) {
-                    warmups = new Integer(argv[i+1]);
+                    warmups = new Integer(argv[i + 1]);
                     i += 2;
                     continue;
                 }
 
                 if (argv[i].equals("-d")) {
-                    datafile = argv[i+1];
+                    datafile = argv[i + 1];
                     cleardata();
                     i += 2;
                     continue;
@@ -129,7 +129,7 @@ public class Search {
             if (file.read() >= 0)
                 System.out.println("\nWarning: file truncated to " + max + " characters\n");
 
-            if (ntasks <= 0 || nthreads <= 0 || pattern.length <= 0 || warmups <0 || runs <= 0)
+            if (ntasks <= 0 || nthreads <= 0 || pattern.length <= 0 || warmups < 0 || runs <= 0)
                 throw new Exception("Illegal argument(s)");
 
         } catch (Exception e) {
@@ -138,7 +138,7 @@ public class Search {
                     + "    -P           Print found positions\n"
                     + "    -W w         Make w warmup searches (w >=0)\n"
                     + "    -R r         Run the search n times (r > 0)\n"
-                    + "    -d datafile  Define datafile\n\n" );
+                    + "    -d datafile  Define datafile\n\n");
             System.exit(1);
         }
     }
@@ -182,9 +182,9 @@ public class Search {
         try {
             if (datafile != null) {
                 // Append result to data file
-                FileWriter f = new FileWriter(datafile,true);
-                PrintWriter data =  new PrintWriter(new BufferedWriter(f));
-                data.println(s.replace(".",","));
+                FileWriter f = new FileWriter(datafile, true);
+                PrintWriter data = new PrintWriter(new BufferedWriter(f));
+                data.println(s.replace(".", ","));
                 data.close();
             }
         } catch (IOException e) {
@@ -235,13 +235,16 @@ public class Search {
                 //Making data for the datafile:
                 String data = "" + time;
                 writeData(data);
-                writeRun(run);  writeResult(singleResult);  writeTime(time);
+                writeRun(run);
+                writeResult(singleResult);
+                writeTime(time);
             }
             writeData("Measurement over!"); //to differentiate between different measurements in datafile.
 
             double singleTime = totalTime / runs;
             System.out.print("\n\nSingle task (avg.): ");
-            writeTime(singleTime);  System.out.println();
+            writeTime(singleTime);
+            System.out.println();
 
 
             /**********************************************
@@ -253,16 +256,16 @@ public class Search {
             // Create list of tasks
             List<SearchTask> taskList = new ArrayList<SearchTask>();
             // Add tasks to list here
-            int idealSplitUp = len/ntasks;
-            int patterLength = pattern.length;
+            int idealSplitUp = len / ntasks;
+            int patterLength = pattern.length - 1;
             for (int i = 0; i < ntasks; i++) {
                 int from = i * idealSplitUp;
-                int to = ((i+1) * idealSplitUp) +patterLength;
+                int to = ((i + 1) * idealSplitUp) + patterLength;
                 if (i + 1 == ntasks) {
                     to = len;
                 }
                 //char [] textsplit = Arrays.copyOfRange(text,from,to); //TODO: this does not seem nessesary
-                taskList.add(new SearchTask(text,pattern,from, to));
+                taskList.add(new SearchTask(text, pattern, from, to));
             }
             List<Integer> result = new LinkedList<Integer>();
 
@@ -282,7 +285,7 @@ public class Search {
 
                 // Overall result is an ordered list of unique occurrence positions
                 result = new LinkedList<Integer>();
-                for (int i=0; i < futures.size(); i++) {
+                for (int i = 0; i < futures.size(); i++) {
                     if (futures.get(i) != null) {
                         result.addAll(futures.get(i).get());
                     }
@@ -294,12 +297,15 @@ public class Search {
                 totalTime += time;
 
                 System.out.printf("\nUsing %2d tasks: ", ntasks);
-                writeRun(run);  writeResult(result);  writeTime(time);
+                writeRun(run);
+                writeResult(result);
+                writeTime(time);
             }
 
             double multiTime = totalTime / runs;
             System.out.printf("\n\nUsing %2d tasks (avg.): ", ntasks);
-            writeTime(multiTime);  System.out.println();
+            writeTime(multiTime);
+            System.out.println();
 
 
             if (!singleResult.equals(result)) {
