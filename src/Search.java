@@ -97,7 +97,6 @@ public class Search {
 
                 if (argv[i].equals("-d")) {
                     datafile = argv[i + 1];
-                    cleardata();
                     i += 2;
                     continue;
                 }
@@ -125,6 +124,10 @@ public class Search {
             InputStreamReader file = new InputStreamReader(new FileInputStream(fname));
 
             len = file.read(text);
+            // check if ntasks is to big
+            if (ntasks > len) {
+                throw new Exception("There cannot be more tasks the characters in the text use: " + len + " or less");
+            }
 
             if (file.read() >= 0)
                 System.out.println("\nWarning: file truncated to " + max + " characters\n");
