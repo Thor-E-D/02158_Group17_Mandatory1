@@ -8,20 +8,19 @@ public class runner {
     static String datafile;            // Name of data file
 
     public static void main(String[] argv) {
-        int[] taskArray = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 30, 40, 50, 60};
+        writeData("for assignemnt 5 problemt 3 \n");
+
+        int[] taskArray = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 30, 40, 50, 60, 70, 80, 90, 100};
         int[] threadArray = {1, 2, 4, 6, 8, 10, 12};
 
         datafile = "datafile.txt";
         int currentTask = 0;
 
-        for (int thread: threadArray) {
             for (int task: taskArray) {
                 argv[8] = Integer.toString(task);
-                argv[9] = Integer.toString(thread);
                 new Search(argv);
             }
-            writeData("used " + thread + " threads for the above meassurments");
-        }
+            writeData("end of meassurments");
 
         for (String hej: argv) {
             System.out.println(hej);
